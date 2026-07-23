@@ -11,7 +11,7 @@ interface ProjectCardProps {
 
 export function ProjectCard({
   title = "Proyecto",
-  tagline = "",
+  tagline = "Desarrollo",
   description = "",
   demoUrl = "#",
   githubUrl = "#",
@@ -20,7 +20,9 @@ export function ProjectCard({
   return (
     <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 flex flex-col justify-between h-full hover:border-emerald-500/50 transition-all duration-300">
       <div>
-        {tagline && <span className="text-emerald-400 text-xs font-mono mb-2 block">{tagline}</span>}
+        <span className="text-emerald-400 text-xs font-mono mb-2 block">
+          {tagline || "Desarrollo"}
+        </span>
         <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
         <p className="text-gray-400 text-sm mb-4 line-clamp-4">{description}</p>
         
