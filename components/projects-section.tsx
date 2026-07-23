@@ -1,28 +1,52 @@
-import { projects } from '@/lib/portfolio-data'
-import { ProjectCard } from './project-card'
+"use client"
+
+import { useEffect, useState } from "react"
+import { ProjectCard } from "./project-card"
+
+// Definimos la estructura de datos que devuelve tu backend
+interface Product {
+  _id: string
+  title: string
+  description: string
+}
 
 export function ProjectsSection() {
-  return (
-    <section id="projects" className="border-b border-border/60">
-      <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
-        <div className="max-w-2xl">
-          <p className="font-mono text-sm text-primary">{'// proyectos'}</p>
-          <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight sm:text-4xl">
-            Proyectos seleccionados
-          </h2>
-          <p className="mt-4 text-pretty leading-relaxed text-muted-foreground">
-            Cinco proyectos que muestran cómo pienso las APIs, la fiabilidad y la
-            experiencia de desarrollo, cada uno construido con un flujo de
-            trabajo asistido por IA.
-          </p>
-        </div>
+  const [projects, setProjects] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
 
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+  useEffect(() => {
+    // Petición HTTP real a tu servidor en Render
+    fetch("https://onrender.com")
+      .then((res) => res.json())
+      .then((data) => {
+        // Si tu backend devuelve un array, lo guardamos
+        if (Array.isArray(data)) {
+          setProjects(data)
+        }
+      })
+      .catch((err) => console.error("Error conectando al backend:", err))
+      .finally(() => setLoading(false))
+  }, [])
+
+  return (
+    <section className="py-16 px-6 max-w-6xl mx-auto" id="projects">
+      <h2 className="text-3xl font-bold mb-8 text-center">Mis Proyectos Integrados</h2>
+      
+      {loading ? (
+        <p className="text-center text-gray-500">Cargando proyectos desde el servidor en Render...</p>
+      ) : projects.length === 0 ? (
+        <p className="text-center text-gray-500">No hay proyectos registrados en la base de datos.</p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((project) => (
-            <ProjectCard key={project.name} project={project} />
+            <ProjectCard 
+              key={project._id}
+              title={project.title}
+              description={project.description}
+            />
           ))}
         </div>
-      </div>
+      )}
     </section>
   )
 }
